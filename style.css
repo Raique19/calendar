@@ -1,33 +1,99 @@
-body {
-  font-family: Arial;
-  background:#f4f6f9;
-  margin:20px;
+
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:#f1f3f7;
 }
-h1{text-align:center;}
+.topbar{
+  background:#2c3e50;
+  color:white;
+  padding:15px;
+  text-align:center;
+}
+.layout{
+  display:flex;
+}
+.sidebar{
+  width:220px;
+  background:#fff;
+  padding:15px;
+  box-shadow:2px 0 10px rgba(0,0,0,0.05);
+}
+.sidebar h3{margin-top:0;}
+.sidebar ul{list-style:none;padding:0;}
+.sidebar li{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  margin-bottom:8px;
+}
+.dot{
+  width:12px;height:12px;border-radius:50%;
+}
+main{
+  flex:1;
+  padding:20px;
+}
 #calendar{
-  max-width:1100px;
-  margin:auto;
   background:white;
-  padding:10px;
-  border-radius:12px;
+  border-radius:16px;
+  padding:15px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.08);
 }
+
+/* Modal */
 .modal{
  position:fixed;
  top:0;left:0;
  width:100%;height:100%;
  background:rgba(0,0,0,0.5);
  display:flex;
- align-items:center;
  justify-content:center;
+ align-items:center;
+ z-index:9999;
+ animation:fadeIn .2s ease;
+}
+@keyframes fadeIn{
+ from{opacity:0}
+ to{opacity:1}
 }
 .hidden{display:none;}
 .modal-content{
  background:white;
  padding:20px;
- border-radius:10px;
- width:300px;
+ border-radius:16px;
+ width:320px;
+ animation:scaleIn .2s ease;
 }
-.modal-content input,.modal-content select{
- width:100%;
- margin-bottom:10px;
+@keyframes scaleIn{
+ from{transform:scale(.9);opacity:0}
+ to{transform:scale(1);opacity:1}
 }
+.row{
+ display:flex;
+ gap:10px;
+}
+.preview{
+ margin-top:10px;
+ display:flex;
+ align-items:center;
+ gap:8px;
+}
+#previewDot{
+ width:12px;height:12px;border-radius:50%;
+}
+.actions{
+ display:flex;
+ gap:8px;
+ margin-top:10px;
+}
+button{
+ padding:8px;
+ border:none;
+ border-radius:8px;
+ cursor:pointer;
+}
+#save{background:#27ae60;color:#fff;}
+#delete{background:#e74c3c;color:#fff;}
+#close{background:#bdc3c7;}

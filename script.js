@@ -1,6 +1,7 @@
+
 import { supabase } from './supabase.js'
 
-const colors = {
+const categories = {
   reuniao:"#e74c3c",
   evento:"#8e44ad",
   trabalho:"#3498db",
@@ -9,66 +10,106 @@ const colors = {
   atendimento:"#2c3e50"
 }
 
-let calendar, selectedDate=null, selectedEvent=null
+let calendar,selectedDate=null,selectedEvent=null,filterCategory=null
 
-document.addEventListener('DOMContentLoaded', async ()=>{
+document.addEventListener('DOMContentLoaded',async()=>{
+
+// sidebar categorias
+const list=document.getElementById('categoryList')
+const select=document.getElementById('category')
+
+Object.keys(categories).forEach(c=>{
+  const li=document.createElement('li')
+  li.innerHTML=`<span class="dot" style="background:${categories[c]}"></span>${c}`
+  li.onclick=()=>{filterCategory=c;calendar.refetchEvents()}
+  list.appendChild(li)
+
+  const opt=document.createElement('option')
+  opt.value=c
+  opt.textContent=c
+  select.appendChild(opt)
+})
+
+// preview
+const previewDot=document.getElementById('previewDot')
+const previewText=document.getElementById('previewText')
+
+function updatePreview(){
+  const title=document.getElementById('title').value||'Sem título'
+  const cat=document.getElementById('category').value
+  previewDot.style.background=categories[cat]
+  previewText.textContent=title
+}
+
+document.getElementById('title').oninput=updatePreview
+document.getElementById('category').onchange=updatePreview
 
 const el=document.getElementById('calendar')
 
 async function load(){
  const {data}=await supabase.from('events').select('*')
- return data.map(e=>({
+ return data
+  .filter(e=>!filterCategory||e.category===filterCategory)
+  .map(e=>({
    id:e.id,
    title:e.title,
    start:`${e.date}T${e.start_time}`,
    end:`${e.date}T${e.end_time}`,
-   color:colors[e.category]
+   color:categories[e.category]
  }))
 }
 
 calendar=new FullCalendar.Calendar(el,{
  initialView:'timeGridWeek',
- headerToolbar:{
-  left:'prev,next today',
-  center:'title',
-  right:'dayGridMonth,timeGridWeek,timeGridDay'
- },
  selectable:true,
  editable:true,
+ eventOverlap:false,
+
+ eventDragStart:(info)=>{
+  info.el.style.opacity=.6
+ },
+ eventDragStop:(info)=>{
+  info.el.style.opacity=1
+ },
 
  dateClick:(info)=>{
-   selectedEvent=null
-   selectedDate=info.dateStr
-   openModal()
+  selectedEvent=null
+  selectedDate=info.dateStr
+  openModal()
  },
 
  eventClick:(info)=>{
-   selectedEvent=info.event
-   openModal(info.event)
+  selectedEvent=info.event
+  openModal(info.event)
  },
 
- eventDrop: async (info)=>{
-   const e=info.event
-   await supabase.from('events').update({
-     date:e.startStr.split('T')[0],
-     start_time:e.startStr.split('T')[1].slice(0,5),
-     end_time:e.endStr.split('T')[1].slice(0,5)
-   }).eq('id',e.id)
+ eventDrop:async(info)=>{
+  const e=info.event
+  await supabase.from('events').update({
+    date:e.startStr.split('T')[0],
+    start_time:e.startStr.split('T')[1].slice(0,5),
+    end_time:e.endStr.split('T')[1].slice(0,5)
+  }).eq('id',e.id)
  },
 
- eventResize: async (info)=>{
-   const e=info.event
-   await supabase.from('events').update({
-     end_time:e.endStr.split('T')[1].slice(0,5)
-   }).eq('id',e.id)
+ eventResize:async(info)=>{
+  const e=info.event
+  await supabase.from('events').update({
+    end_time:e.endStr.split('T')[1].slice(0,5)
+  }).eq('id',e.id)
  },
 
- events: async (i,cb)=> cb(await load())
+ events:async(i,cb)=>cb(await load())
 })
 
 calendar.render()
+
+document.getElementById('todayBtn').onclick=()=>calendar.today()
+document.getElementById('clearFilters').onclick=()=>{filterCategory=null;calendar.refetchEvents()}
+
 })
 
+// modal
 const modal=document.getElementById('modal')
 const save=document.getElementById('save')
 const del=document.getElementById('delete')
@@ -76,7 +117,6 @@ const close=document.getElementById('close')
 
 function openModal(event=null){
  modal.classList.remove('hidden')
-
  if(event){
   del.classList.remove('hidden')
   document.getElementById('title').value=event.title
@@ -87,7 +127,7 @@ function openModal(event=null){
 
 close.onclick=()=>modal.classList.add('hidden')
 
-save.onclick=async ()=>{
+save.onclick=async()=>{
  const title=document.getElementById('title').value
  const start=document.getElementById('start').value
  const end=document.getElementById('end').value
@@ -105,7 +145,7 @@ save.onclick=async ()=>{
  calendar.refetchEvents()
 }
 
-del.onclick=async ()=>{
+del.onclick=async()=>{
  if(!selectedEvent)return
  await supabase.from('events').delete().eq('id',selectedEvent.id)
  modal.classList.add('hidden')

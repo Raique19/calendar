@@ -2,7 +2,8 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Agenda Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda Pro+</title>
 
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
@@ -11,35 +12,58 @@
 </head>
 <body>
 
-<h1>Agenda Profissional</h1>
+<header class="topbar">
+  <h1>Agenda Pro+</h1>
+</header>
 
-<div id="calendar"></div>
+<div class="layout">
+  <aside class="sidebar">
+    <h3>Categorias</h3>
+    <ul id="categoryList"></ul>
+    <hr/>
+    <div class="mini">
+      <button id="todayBtn">Hoje</button>
+      <button id="clearFilters">Limpar filtro</button>
+    </div>
+  </aside>
 
+  <main>
+    <div id="calendar"></div>
+  </main>
+</div>
+
+<!-- Modal -->
 <div id="modal" class="modal hidden">
   <div class="modal-content">
-    <h2 id="modalTitle">Evento</h2>
+    <h2 id="modalTitle">Novo Evento</h2>
 
-    <input id="title" placeholder="Título">
+    <label>Título</label>
+    <input id="title" placeholder="Ex: Reunião com equipe">
 
-    <label>Início</label>
-    <input type="time" id="start">
-
-    <label>Fim</label>
-    <input type="time" id="end">
+    <div class="row">
+      <div>
+        <label>Início</label>
+        <input type="time" id="start">
+      </div>
+      <div>
+        <label>Fim</label>
+        <input type="time" id="end">
+      </div>
+    </div>
 
     <label>Categoria</label>
-    <select id="category">
-      <option value="reuniao">Reunião</option>
-      <option value="evento">Evento</option>
-      <option value="trabalho">Trabalho</option>
-      <option value="aula">Aula</option>
-      <option value="orientacao">Orientação</option>
-      <option value="atendimento">Atendimento</option>
-    </select>
+    <select id="category"></select>
 
-    <button id="save">Salvar</button>
-    <button id="delete" class="hidden">Excluir</button>
-    <button id="close">Cancelar</button>
+    <div class="preview">
+      <span id="previewDot"></span>
+      <span id="previewText">Pré-visualização</span>
+    </div>
+
+    <div class="actions">
+      <button id="save">Salvar</button>
+      <button id="delete" class="hidden">Excluir</button>
+      <button id="close">Cancelar</button>
+    </div>
   </div>
 </div>
 
