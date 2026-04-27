@@ -1,72 +1,72 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agenda Pro+</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agenda Pro</title>
 
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <!-- FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.global.min.js"></script>
 
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header class="topbar">
-  <h1>Agenda Pro+</h1>
-</header>
+  <header class="topbar">
+    Agenda Profissional
+  </header>
 
-<div class="layout">
-  <aside class="sidebar">
-    <h3>Categorias</h3>
-    <ul id="categoryList"></ul>
-    <hr/>
-    <div class="mini">
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <h3>Categorias</h3>
+      <ul id="categoryList"></ul>
+
       <button id="todayBtn">Hoje</button>
       <button id="clearFilters">Limpar filtro</button>
-    </div>
-  </aside>
+    </aside>
 
-  <main>
-    <div id="calendar"></div>
-  </main>
-</div>
+    <!-- MAIN -->
+    <main>
+      <div id="calendar"></div>
+    </main>
 
-<!-- Modal -->
-<div id="modal" class="modal hidden">
-  <div class="modal-content">
-    <h2 id="modalTitle">Novo Evento</h2>
+  </div>
 
-    <label>Título</label>
-    <input id="title" placeholder="Ex: Reunião com equipe">
+  <!-- MODAL -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
 
-    <div class="row">
-      <div>
-        <label>Início</label>
+      <h2 id="modalTitle">Novo Evento</h2>
+
+      <input id="title" placeholder="Título">
+
+      <div class="row">
         <input type="time" id="start">
-      </div>
-      <div>
-        <label>Fim</label>
         <input type="time" id="end">
       </div>
-    </div>
 
-    <label>Categoria</label>
-    <select id="category"></select>
+      <select id="category"></select>
 
-    <div class="preview">
-      <span id="previewDot"></span>
-      <span id="previewText">Pré-visualização</span>
-    </div>
+      <!-- PREVIEW -->
+      <div class="preview">
+        <span id="previewDot"></span>
+        <span id="previewText">Pré-visualização</span>
+      </div>
 
-    <div class="actions">
-      <button id="save">Salvar</button>
-      <button id="delete" class="hidden">Excluir</button>
-      <button id="close">Cancelar</button>
+      <div class="actions">
+        <button id="save">Salvar</button>
+        <button id="delete" class="hidden">Excluir</button>
+        <button id="close">Cancelar</button>
+      </div>
+
     </div>
   </div>
-</div>
 
-<script type="module" src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
