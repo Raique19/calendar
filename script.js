@@ -1,153 +1,257 @@
-
 import { supabase } from './supabase.js'
 
 const categories = {
-  reuniao:"#e74c3c",
-  evento:"#8e44ad",
-  trabalho:"#3498db",
-  aula:"#27ae60",
-  orientacao:"#f39c12",
-  atendimento:"#2c3e50"
+  reuniao: "#e74c3c",
+  evento: "#8e44ad",
+  trabalho: "#3498db",
+  aula: "#27ae60",
+  orientacao: "#f39c12",
+  atendimento: "#2c3e50"
+};
+
+let calendar;
+let selectedDate = null;
+let selectedEvent = null;
+let filterCategory = null;
+
+/* ================= FERIADOS ================= */
+
+function getEaster(year) {
+  const f = Math.floor;
+  const G = year % 19;
+  const C = f(year / 100);
+  const H = (C - f(C / 4) - f((8 * C + 13) / 25) + 19 * G + 15) % 30;
+  const I = H - f(H / 28) * (1 - f(29 / (H + 1)) * f((21 - G) / 11));
+  const J = (year + f(year / 4) + I + 2 - C + f(C / 4)) % 7;
+  const L = I - J;
+  const month = 3 + f((L + 40) / 44);
+  const day = L + 28 - 31 * f(month / 4);
+  return new Date(year, month - 1, day);
 }
 
-let calendar,selectedDate=null,selectedEvent=null,filterCategory=null
+function getHolidays(year) {
+  const easter = getEaster(year);
 
-document.addEventListener('DOMContentLoaded',async()=>{
+  const carnaval = new Date(easter);
+  carnaval.setDate(easter.getDate() - 47);
 
-// sidebar categorias
-const list=document.getElementById('categoryList')
-const select=document.getElementById('category')
+  const sextaSanta = new Date(easter);
+  sextaSanta.setDate(easter.getDate() - 2);
 
-Object.keys(categories).forEach(c=>{
-  const li=document.createElement('li')
-  li.innerHTML=`<span class="dot" style="background:${categories[c]}"></span>${c}`
-  li.onclick=()=>{filterCategory=c;calendar.refetchEvents()}
-  list.appendChild(li)
+  const corpus = new Date(easter);
+  corpus.setDate(easter.getDate() + 60);
 
-  const opt=document.createElement('option')
-  opt.value=c
-  opt.textContent=c
-  select.appendChild(opt)
-})
+  return [
+    { title: "Confraternização Universal", date: `${year}-01-01` },
+    { title: "Tiradentes", date: `${year}-04-21` },
+    { title: "Dia do Trabalho", date: `${year}-05-01` },
+    { title: "Independência do Brasil", date: `${year}-09-07` },
+    { title: "Nossa Senhora Aparecida", date: `${year}-10-12` },
+    { title: "Finados", date: `${year}-11-02` },
+    { title: "Proclamação da República", date: `${year}-11-15` },
+    { title: "Natal", date: `${year}-12-25` },
 
-// preview
-const previewDot=document.getElementById('previewDot')
-const previewText=document.getElementById('previewText')
+    { title: "Independência da Bahia", date: `${year}-07-02` },
+    { title: "Aniversário de Salvador", date: `${year}-03-29` },
+    { title: "Nossa Senhora da Conceição", date: `${year}-12-08` },
 
-function updatePreview(){
-  const title=document.getElementById('title').value||'Sem título'
-  const cat=document.getElementById('category').value
-  previewDot.style.background=categories[cat]
-  previewText.textContent=title
+    { title: "Carnaval", date: carnaval.toISOString().split('T')[0] },
+    { title: "Sexta-feira Santa", date: sextaSanta.toISOString().split('T')[0] },
+    { title: "Corpus Christi", date: corpus.toISOString().split('T')[0] }
+  ];
 }
 
-document.getElementById('title').oninput=updatePreview
-document.getElementById('category').onchange=updatePreview
+/* ================= INIT ================= */
 
-const el=document.getElementById('calendar')
+document.addEventListener('DOMContentLoaded', async () => {
 
-async function load(){
- const {data}=await supabase.from('events').select('*')
- return data
-  .filter(e=>!filterCategory||e.category===filterCategory)
-  .map(e=>({
-   id:e.id,
-   title:e.title,
-   start:`${e.date}T${e.start_time}`,
-   end:`${e.date}T${e.end_time}`,
-   color:categories[e.category]
- }))
+  const calendarEl = document.getElementById('calendar');
+  const categoryList = document.getElementById('categoryList');
+  const categorySelect = document.getElementById('category');
+
+  /* SIDEBAR + SELECT */
+  Object.keys(categories).forEach(cat => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="dot" style="background:${categories[cat]}"></span>${cat}`;
+    li.onclick = () => {
+      filterCategory = cat;
+      calendar.refetchEvents();
+    };
+    categoryList.appendChild(li);
+
+    const option = document.createElement('option');
+    option.value = cat;
+    option.textContent = cat;
+    categorySelect.appendChild(option);
+  });
+
+  /* PREVIEW */
+  const previewDot = document.getElementById('previewDot');
+  const previewText = document.getElementById('previewText');
+
+  function updatePreview() {
+    const title = document.getElementById('title').value || 'Sem título';
+    const cat = document.getElementById('category').value;
+
+    previewDot.style.background = categories[cat];
+    previewText.textContent = title;
+  }
+
+  document.getElementById('title').oninput = updatePreview;
+  document.getElementById('category').onchange = updatePreview;
+
+  /* LOAD EVENTS */
+  async function loadEvents() {
+    const { data } = await supabase.from('events').select('*');
+
+    return data
+      .filter(e => !filterCategory || e.category === filterCategory)
+      .map(e => ({
+        id: e.id,
+        title: e.title,
+        start: `${e.date}T${e.start_time}`,
+        end: `${e.date}T${e.end_time}`,
+        color: categories[e.category]
+      }));
+  }
+
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+
+    locale: 'pt-br',
+
+    buttonText: {
+      today: 'Hoje',
+      month: 'Mês',
+      week: 'Semana',
+      day: 'Dia'
+    },
+
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+
+    editable: true,
+    selectable: true,
+
+    eventDragStart: (info) => info.el.style.opacity = 0.6,
+    eventDragStop: (info) => info.el.style.opacity = 1,
+
+    dateClick: (info) => {
+      selectedEvent = null;
+      selectedDate = info.dateStr;
+      openModal();
+    },
+
+    eventClick: (info) => {
+      selectedEvent = info.event;
+      openModal(info.event);
+    },
+
+    eventDrop: async (info) => {
+      const e = info.event;
+      await supabase.from('events').update({
+        date: e.startStr.split('T')[0],
+        start_time: e.startStr.split('T')[1].slice(0,5),
+        end_time: e.endStr.split('T')[1].slice(0,5)
+      }).eq('id', e.id);
+    },
+
+    eventResize: async (info) => {
+      const e = info.event;
+      await supabase.from('events').update({
+        end_time: e.endStr.split('T')[1].slice(0,5)
+      }).eq('id', e.id);
+    },
+
+    events: async (fetchInfo, successCallback) => {
+      const events = await loadEvents();
+      const year = new Date().getFullYear();
+
+      const holidays = getHolidays(year).map(h => ({
+        title: h.title,
+        start: h.date,
+        allDay: true,
+        color: "#95a5a6"
+      }));
+
+      successCallback([...events, ...holidays]);
+    }
+  });
+
+  calendar.render();
+
+  /* BOTÕES */
+  document.getElementById('todayBtn').onclick = () => calendar.today();
+  document.getElementById('clearFilters').onclick = () => {
+    filterCategory = null;
+    calendar.refetchEvents();
+  };
+
+});
+
+/* ================= MODAL ================= */
+
+const modal = document.getElementById('modal');
+const saveBtn = document.getElementById('save');
+const deleteBtn = document.getElementById('delete');
+const closeBtn = document.getElementById('close');
+
+function openModal(event = null) {
+  modal.classList.remove('hidden');
+
+  if (event) {
+    deleteBtn.classList.remove('hidden');
+    document.getElementById('title').value = event.title;
+  } else {
+    deleteBtn.classList.add('hidden');
+  }
 }
 
-calendar=new FullCalendar.Calendar(el,{
- initialView:'timeGridWeek',
- selectable:true,
- editable:true,
- eventOverlap:false,
+closeBtn.onclick = () => modal.classList.add('hidden');
 
- eventDragStart:(info)=>{
-  info.el.style.opacity=.6
- },
- eventDragStop:(info)=>{
-  info.el.style.opacity=1
- },
+/* FECHAR AO CLICAR FORA */
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) modal.classList.add('hidden');
+});
 
- dateClick:(info)=>{
-  selectedEvent=null
-  selectedDate=info.dateStr
-  openModal()
- },
+/* SALVAR */
 
- eventClick:(info)=>{
-  selectedEvent=info.event
-  openModal(info.event)
- },
+saveBtn.onclick = async () => {
+  const title = document.getElementById('title').value;
+  const start = document.getElementById('start').value;
+  const end = document.getElementById('end').value;
+  const category = document.getElementById('category').value;
 
- eventDrop:async(info)=>{
-  const e=info.event
-  await supabase.from('events').update({
-    date:e.startStr.split('T')[0],
-    start_time:e.startStr.split('T')[1].slice(0,5),
-    end_time:e.endStr.split('T')[1].slice(0,5)
-  }).eq('id',e.id)
- },
+  if (selectedEvent) {
+    await supabase.from('events')
+      .update({ title })
+      .eq('id', selectedEvent.id);
+  } else {
+    await supabase.from('events').insert([{
+      title,
+      date: selectedDate,
+      start_time: start,
+      end_time: end,
+      category
+    }]);
+  }
 
- eventResize:async(info)=>{
-  const e=info.event
-  await supabase.from('events').update({
-    end_time:e.endStr.split('T')[1].slice(0,5)
-  }).eq('id',e.id)
- },
+  modal.classList.add('hidden');
+  calendar.refetchEvents();
+};
 
- events:async(i,cb)=>cb(await load())
-})
+/* EXCLUIR */
 
-calendar.render()
+deleteBtn.onclick = async () => {
+  if (!selectedEvent) return;
 
-document.getElementById('todayBtn').onclick=()=>calendar.today()
-document.getElementById('clearFilters').onclick=()=>{filterCategory=null;calendar.refetchEvents()}
+  await supabase.from('events')
+    .delete()
+    .eq('id', selectedEvent.id);
 
-})
-
-// modal
-const modal=document.getElementById('modal')
-const save=document.getElementById('save')
-const del=document.getElementById('delete')
-const close=document.getElementById('close')
-
-function openModal(event=null){
- modal.classList.remove('hidden')
- if(event){
-  del.classList.remove('hidden')
-  document.getElementById('title').value=event.title
- }else{
-  del.classList.add('hidden')
- }
-}
-
-close.onclick=()=>modal.classList.add('hidden')
-
-save.onclick=async()=>{
- const title=document.getElementById('title').value
- const start=document.getElementById('start').value
- const end=document.getElementById('end').value
- const category=document.getElementById('category').value
-
- if(selectedEvent){
-  await supabase.from('events').update({title}).eq('id',selectedEvent.id)
- }else{
-  await supabase.from('events').insert([{
-   title,date:selectedDate,start_time:start,end_time:end,category
-  }])
- }
-
- modal.classList.add('hidden')
- calendar.refetchEvents()
-}
-
-del.onclick=async()=>{
- if(!selectedEvent)return
- await supabase.from('events').delete().eq('id',selectedEvent.id)
- modal.classList.add('hidden')
- calendar.refetchEvents()
-}
+  modal.classList.add('hidden');
+  calendar.refetchEvents();
+};
