@@ -228,11 +228,11 @@ if (menuBtn) {
   day: 'Dia'
 },
 
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    },
+   headerToolbar: {
+  left: 'prev,next today',
+  center: 'title',
+  right: window.innerWidth < 768 ? 'timeGridWeek,timeGridDay' : 'month,week,day'
+}
 
     editable: true,
     selectable: true,
