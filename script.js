@@ -117,6 +117,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   calendar = new FullCalendar.Calendar(calendarEl, {
 
+    dayCellDidMount: function(info) {
+  const date = info.date.toISOString().split('T')[0];
+  const year = info.date.getFullYear();
+
+  const holidays = getHolidays(year);
+
+  const isHoliday = holidays.find(h => h.date === date);
+
+  if (isHoliday) {
+    info.el.style.backgroundColor = "#ffecec"; // vermelho claro
+  }
+},
+    
     initialView: 'dayGridMonth',
 
     locale: 'pt-br',
@@ -172,12 +185,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const year = fetchInfo.start.getFullYear();
 
-      const holidays = getHolidays(year).map(h => ({
-        title: h.title,
-        start: h.date,
-        allDay: true,
-        color: "#bdc3c7"
-      }));
+    const holidays = getHolidays(year).map(h => ({
+  title: h.title,
+  start: h.date,
+  allDay: true,
+  color: "#f8d7da",
+  textColor: "#721c24"
+}));
 
       successCallback([...events, ...holidays]);
     }
