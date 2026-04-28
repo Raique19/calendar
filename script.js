@@ -77,25 +77,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   /* SIDEBAR */
   Object.keys(categories).forEach(cat => {
-    const li = document.createElement('li');
-li.dataset.cat = cat;
+  const li = document.createElement('li');
+  li.dataset.cat = cat;
 
-li.innerHTML = `
-  <span class="dot" style="background:${categories[cat]}"></span>
-  <span>${cat}</span>
-  <span class="count">0</span>
-`;
+  li.innerHTML = `
+    <span class="dot" style="background:${categories[cat]}"></span>
+    <span>${cat}</span>
+    <span class="count">0</span>
+  `;
 
-li.onclick = () => {
-  filterCategory = cat;
+  li.onclick = () => {
+    filterCategory = cat;
 
-  document.querySelectorAll('.sidebar li').forEach(el => el.classList.remove('active'));
-  li.classList.add('active');
+    document.querySelectorAll('.sidebar li').forEach(el => el.classList.remove('active'));
+    li.classList.add('active');
 
-  calendar.refetchEvents();
-};
+    calendar.refetchEvents();
+  };
 
-    categoryList.appendChild(li);
+  // 👇 ESSENCIAL
+  categoryList.appendChild(li);
 });
     
   /* PREVIEW */
