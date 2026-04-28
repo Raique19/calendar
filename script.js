@@ -174,6 +174,42 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   calendar = new FullCalendar.Calendar(calendarEl, {
 
+    eventContent: function(arg) {
+
+  const start = arg.event.extendedProps.start_time || "";
+  const end = arg.event.extendedProps.end_time || "";
+  const color = arg.event.backgroundColor;
+
+  const formatTime = (t) => t ? t.slice(0,5) : "";
+
+  const startFormatted = formatTime(start);
+  const endFormatted = formatTime(end);
+
+  const mode = arg.event.extendedProps.mode;
+
+  return {
+    html: `
+      <div class="event-box" style="border-left:4px solid ${color}">
+        
+        <div class="event-header">
+
+          ${startFormatted && endFormatted 
+            ? `<span class="event-time">${startFormatted} - ${endFormatted}</span>` 
+            : ""
+          }
+
+          ${mode ? `<span class="event-mode ${mode}">
+            ${mode === 'virtual' ? 'ON' : 'PRE'}
+          </span>` : ""}
+        </div>
+
+        <div class="event-title">${arg.event.title}</div>
+
+      </div>
+    `
+  };
+},
+
     initialView: 'dayGridMonth',
     locale: 'pt-br',
 
@@ -213,18 +249,41 @@ document.addEventListener('DOMContentLoaded', async () => {
       const joinBtn = document.getElementById('joinBtn');
 
       if (link) {
-        linkEl.innerText = link;
+  const url = link.toLowerCase();
 
-        if (joinBtn) {
-          joinBtn.href = link;
-          joinBtn.classList.remove("hidden");
-        }
+  let label = "Abrir link";
+  let icon = "fa-link";
 
-      } else {
-        linkEl.innerText = "-";
-        if (joinBtn) joinBtn.classList.add("hidden");
-      }
+  joinBtn.classList.remove("teams", "meet", "zoom");
 
+  if (url.includes("teams.microsoft.com")) {
+    label = "Entrar no Teams";
+    icon = "fa-video";
+    joinBtn.classList.add("teams");
+  } 
+  else if (url.includes("meet.google.com")) {
+    label = "Entrar no Meet";
+    icon = "fa-video";
+    joinBtn.classList.add("meet");
+  } 
+  else if (url.includes("zoom.us")) {
+    label = "Entrar no Zoom";
+    icon = "fa-video";
+    joinBtn.classList.add("zoom");
+  }
+
+  linkEl.innerText = link;
+
+  if (joinBtn) {
+    joinBtn.innerHTML = `<i class="fa-solid ${icon}"></i> ${label}`;
+    joinBtn.href = link;
+    joinBtn.classList.remove("hidden");
+  }
+
+} else {
+  linkEl.innerText = "-";
+  if (joinBtn) joinBtn.classList.add("hidden");
+}
       document.getElementById('detailsModal').classList.remove('hidden');
     },
 
