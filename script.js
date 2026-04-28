@@ -209,7 +209,8 @@ const mode = arg.event.extendedProps.mode;
     </div>
   `
 };
-    eventDidMount: function(info) {
+},
+  
   const props = info.event.extendedProps;
 
   const start = info.event.start?.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
