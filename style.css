@@ -499,3 +499,55 @@ main {
     font-size: 13px !important;
   }
 }
+@media (max-width: 768px) {
+
+  .fc-daygrid-event {
+    margin-bottom: 6px;
+  }
+
+  .fc-event {
+    padding: 10px 12px !important;
+    border-radius: 12px !important;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .event-title {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .event-time {
+    font-size: 11px;
+  }
+
+  .event-mode {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .fc-daygrid-event {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .event-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+}
+.event-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
