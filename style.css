@@ -343,3 +343,29 @@ main {
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(0,0,0,0.15);
 }
+.event-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.event-mode {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 6px;
+  opacity: 0.85;
+}
+
+/* ONLINE */
+.event-mode.virtual {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+/* PRESENCIAL */
+.event-mode.presencial {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
