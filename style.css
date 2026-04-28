@@ -551,3 +551,48 @@ main {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+@media (max-width: 768px) {
+
+  .fc-timegrid-event {
+    border-radius: 10px !important;
+    padding: 6px !important;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .fc-timegrid-event .event-title {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .fc-timegrid-event .event-time {
+    font-size: 11px;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .fc-timegrid-event {
+    min-height: 50px;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .fc-timegrid-slot {
+    height: 60px;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .fc-timegrid-axis {
+    font-size: 10px;
+  }
+
+  .fc-col-header-cell {
+    font-size: 11px;
+  }
+
+}
