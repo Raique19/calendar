@@ -213,6 +213,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     initialView: 'dayGridMonth',
     locale: 'pt-br',
 
+    buttonText: {
+  today: 'Hoje',
+  month: 'Mês',
+  week: 'Semana',
+  day: 'Dia'
+},
+
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
