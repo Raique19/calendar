@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'month,week,day'
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
 
     editable: true,
