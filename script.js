@@ -167,6 +167,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
    eventClick: (info) => {
 
+     selectedEvent = info.event;
+
   const event = info.event;
 
   document.getElementById('detailTitle').innerText = event.title;
@@ -286,6 +288,28 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btn) {
     btn.onclick = () => {
       document.getElementById('detailsModal').classList.add('hidden');
+    };
+  }
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const deleteBtn = document.getElementById('deleteEvent');
+
+  if (deleteBtn) {
+    deleteBtn.onclick = async () => {
+
+      if (!selectedEvent) return;
+
+      const confirmar = confirm("Deseja excluir este evento?");
+      if (!confirmar) return;
+
+      await supabase
+        .from('events')
+        .delete()
+        .eq('id', selectedEvent.id);
+
+      document.getElementById('detailsModal').classList.add('hidden');
+
+      calendar.refetchEvents();
     };
   }
 });
