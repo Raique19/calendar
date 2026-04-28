@@ -101,19 +101,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('category').onchange = updatePreview;
 
   /* LOAD EVENTS */
-  async function loadEvents() {
-    const { data } = await supabase.from('events').select('*');
+ async function loadEvents() {
+  const { data } = await supabase.from('events').select('*');
 
-    return data
-      .filter(e => !filterCategory || e.category === filterCategory)
-      .map(e => ({
-        id: e.id,
-        title: e.title,
-        start: `${e.date}T${e.start_time}`,
-        end: `${e.date}T${e.end_time}`,
-        color: categories[e.category]
-      }));
-  }
+  return data
+    .filter(e => !filterCategory || e.category === filterCategory)
+    .map(e => ({
+      id: e.id,
+      title: e.title,
+      start: `${e.date}T${e.start_time}`,
+      end: `${e.date}T${e.end_time}`,
+      color: categories[e.category],
+
+      extendedProps: {
+        mode: e.mode,
+        location: e.location,
+        link: e.link
+      }
+    }));
+}
 
   calendar = new FullCalendar.Calendar(calendarEl, {
 
@@ -159,19 +165,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       openModal();
     },
 
-    eventClick: (info) => {
-      selectedEvent = info.event;
-      openModal(info.event);
-    },
+   eventClick: (info) => {
 
-    eventDrop: async (info) => {
-      const e = info.event;
-      await supabase.from('events').update({
-        date: e.startStr.split('T')[0],
-        start_time: e.startStr.split('T')[1].slice(0,5),
-        end_time: e.endStr.split('T')[1].slice(0,5)
-      }).eq('id', e.id);
-    },
+  const event = info.event;
+
+  document.getElementById('detailTitle').innerText = event.title;
+  document.getElementById('detailMode').innerText = event.extendedProps.mode || "-";
+  document.getElementById('detailLocation').innerText = event.extendedProps.location || "-";
+
+  const link = event.extendedProps.link;
+  document.getElementById('detailLink').innerHTML = link
+    ? `<a href="${link}" target="_blank">Abrir</a>`
+    : "-";
+
+  document.getElementById('detailsModal').classList.remove('hidden');
+}
 
     eventResize: async (info) => {
       const e = info.event;
@@ -238,9 +246,13 @@ saveBtn.onclick = async () => {
   const end = document.getElementById('end').value;
   const category = document.getElementById('category').value;
 
+  const mode = document.getElementById('mode').value;
+  const location = document.getElementById('location').value;
+  const link = document.getElementById('link').value;
+
   if (selectedEvent) {
     await supabase.from('events')
-      .update({ title })
+      .update({ title, mode, location, link })
       .eq('id', selectedEvent.id);
   } else {
     await supabase.from('events').insert([{
@@ -248,7 +260,10 @@ saveBtn.onclick = async () => {
       date: selectedDate,
       start_time: start,
       end_time: end,
-      category
+      category,
+      mode,
+      location,
+      link
     }]);
   }
 
@@ -265,4 +280,7 @@ deleteBtn.onclick = async () => {
 
   modal.classList.add('hidden');
   calendar.refetchEvents();
+};
+document.getElementById('closeDetails').onclick = () => {
+  document.getElementById('detailsModal').classList.add('hidden');
 };
