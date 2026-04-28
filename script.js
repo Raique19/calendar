@@ -135,6 +135,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     info.el.style.backgroundColor = "#ffecec"; // vermelho claro
   }
 },
+
+    eventDidMount: function(info) {
+  const props = info.event.extendedProps;
+
+  const start = info.event.start?.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  const end = info.event.end?.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+  info.el.title = `
+${info.event.title}
+${start || ''} ${end ? '- ' + end : ''}
+${props.location || ''}
+${props.link || ''}
+  `;
+},
     
     initialView: 'dayGridMonth',
 
