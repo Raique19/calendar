@@ -179,20 +179,36 @@ calendar = new FullCalendar.Calendar(calendarEl, {
     eventContent: function(arg) {
   const start = arg.event.extendedProps.start_time || "";
   const end = arg.event.extendedProps.end_time || "";
+      const color = arg.event.backgroundColor;
+const formatTime = (t) => t ? t.slice(0,5) : "";
 
+const startFormatted = formatTime(start);
+const endFormatted = formatTime(end);
+
+const mode = arg.event.extendedProps.mode;
+      
   return {
-    html: `
-      <div class="event-box">
-        <div class="event-header">
-          <span class="event-dot" style="background:${arg.event.backgroundColor}"></span>
-          ${start && end ? `<span class="event-time">${start} - ${end}</span>` : ""}
-        </div>
-        <div class="event-title">${arg.event.title}</div>
-      </div>
-    `
-  };
-},
+  html: `
+    <div class="event-box" style="border-left:4px solid ${color}">
+      
+      <div class="event-header">
+        <span class="event-dot" style="background:${color}"></span>
 
+        ${startFormatted && endFormatted 
+          ? `<span class="event-time">${startFormatted} - ${endFormatted}</span>` 
+          : ""
+        }
+
+        ${mode ? `<span class="event-mode ${mode}">
+          ${mode === 'virtual' ? 'ON' : 'PRE'}
+        </span>` : ""}
+      </div>
+
+      <div class="event-title">${arg.event.title}</div>
+
+    </div>
+  `
+};
     eventDidMount: function(info) {
   const props = info.event.extendedProps;
 
