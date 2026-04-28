@@ -255,43 +255,73 @@ ${props.link || ''}
       openModal();
     },
 
-   eventClick: (info) => {
+  eventClick: (info) => {
 
-     selectedEvent = info.event;
+  selectedEvent = info.event;
 
   const event = info.event;
 
-  document.getElementById('detailTitle').innerText = event.title;
-  document.getElementById('detailMode').innerText = event.extendedProps.mode || "-";
-  document.getElementById('detailLocation').innerText = event.extendedProps.location || "-";
+  const titleEl = document.getElementById('detailTitle');
+  const modeEl = document.getElementById('detailMode');
+  const locationEl = document.getElementById('detailLocation');
+  const linkEl = document.getElementById('detailLinkText');
+  const joinBtn = document.getElementById('joinBtn');
 
+  // TÍTULO
+  titleEl.innerText = event.title;
+
+  // MODE (TAG BONITA)
+  const mode = event.extendedProps.mode;
+  modeEl.innerHTML = `
+    <span class="tag ${mode}">
+      ${mode === 'virtual' ? 'ONLINE' : 'PRESENCIAL'}
+    </span>
+  `;
+
+  // LOCAL
+  locationEl.innerText = event.extendedProps.location || "-";
+
+  // LINK + DETECÇÃO
   const link = event.extendedProps.link;
-  document.getElementById('detailLink').innerHTML = link
-    ? `<a href="${link}" target="_blank">Abrir</a>`
-    : "-";
 
+  if (link) {
+    const url = link.toLowerCase();
+
+    let icon = "fa-link";
+    let label = "Abrir link";
+
+    joinBtn.classList.remove("teams", "meet", "zoom");
+
+    if (url.includes("teams.microsoft.com")) {
+      icon = "fa-video";
+      label = "Entrar no Teams";
+      joinBtn.classList.add("teams");
+    } 
+    else if (url.includes("meet.google.com")) {
+      icon = "fa-video";
+      label = "Entrar no Google Meet";
+      joinBtn.classList.add("meet");
+    } 
+    else if (url.includes("zoom.us")) {
+      icon = "fa-video";
+      label = "Entrar no Zoom";
+      joinBtn.classList.add("zoom");
+    }
+
+    linkEl.innerText = link;
+
+    joinBtn.innerHTML = `<i class="fa-solid ${icon}"></i> ${label}`;
+    joinBtn.href = link;
+    joinBtn.classList.remove("hidden");
+
+  } else {
+    linkEl.innerText = "-";
+    joinBtn.classList.add("hidden");
+  }
+
+  // ABRIR MODAL
   document.getElementById('detailsModal').classList.remove('hidden');
 },
-
-    eventResize: async (info) => {
-      const e = info.event;
-      await supabase.from('events').update({
-        end_time: e.endStr.split('T')[1].slice(0,5)
-      }).eq('id', e.id);
-    },
-
-    events: async function(fetchInfo, successCallback) {
-      const events = await loadEvents();
-
-      const year = fetchInfo.start.getFullYear();
-
-    const holidays = getHolidays(year).map(h => ({
-  title: h.title,
-  start: h.date,
-  allDay: true,
-  color: "#f8d7da",
-  textColor: "#721c24"
-}));
 
       successCallback([...events, ...holidays]);
     }
