@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     : "-";
 
   document.getElementById('detailsModal').classList.remove('hidden');
-}
+},
 
     eventResize: async (info) => {
       const e = info.event;
@@ -281,6 +281,11 @@ deleteBtn.onclick = async () => {
   modal.classList.add('hidden');
   calendar.refetchEvents();
 };
-document.getElementById('closeDetails').onclick = () => {
-  document.getElementById('detailsModal').classList.add('hidden');
-};
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('closeDetails');
+  if (btn) {
+    btn.onclick = () => {
+      document.getElementById('detailsModal').classList.add('hidden');
+    };
+  }
+});
