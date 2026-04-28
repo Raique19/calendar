@@ -260,3 +260,18 @@ button:hover {
 #close:hover {
   background: #dcdde1;
 }
+.fc-day-today {
+  background: #fff8e1 !important;
+}
+.fc-event {
+  border-radius: 8px !important;
+  padding: 4px 6px !important;
+  font-weight: 500;
+}
+.fc-col-header-cell {
+  font-weight: 600;
+  color: #34495e;
+}
+.fc-daygrid-day {
+  padding: 6px;
+}
