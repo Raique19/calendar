@@ -425,3 +425,33 @@ main {
 .fc-event {
   cursor: pointer;
 }
+.fc-event {
+  padding: 8px 10px !important;
+}
+
+.event-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.event-time {
+  font-size: 11px;
+}
+.fc-daygrid-day {
+  transition: 0.15s;
+}
+
+.fc-daygrid-day:hover {
+  background: #f1f5f9;
+  cursor: pointer;
+}
+.fc-day-today {
+  background: #fff3cd !important;
+  border: 2px solid #facc15;
+}
+.fc-daygrid-event {
+  margin-bottom: 4px;
+}
+.fc-daygrid-day[data-holiday="true"] {
+  background: #ffecec;
+}
