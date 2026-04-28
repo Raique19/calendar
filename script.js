@@ -266,10 +266,8 @@ ${props.link || ''}
   const linkEl = document.getElementById('detailLinkText');
   const joinBtn = document.getElementById('joinBtn');
 
-  // TÍTULO
   titleEl.innerText = event.title;
 
-  // TAG
   const mode = event.extendedProps.mode;
   modeEl.innerHTML = `
     <span class="tag ${mode}">
@@ -277,74 +275,44 @@ ${props.link || ''}
     </span>
   `;
 
-  // LOCAL
   locationEl.innerText = event.extendedProps.location || "-";
 
-  // LINK
   const link = event.extendedProps.link;
 
   if (link) {
-    const url = link.toLowerCase();
-
-    let icon = "fa-link";
-    let label = "Abrir link";
-
-    joinBtn.classList.remove("teams", "meet", "zoom");
-
-    if (url.includes("teams.microsoft.com")) {
-      icon = "fa-video";
-      label = "Entrar no Teams";
-      joinBtn.classList.add("teams");
-    } 
-    else if (url.includes("meet.google.com")) {
-      icon = "fa-video";
-      label = "Entrar no Google Meet";
-      joinBtn.classList.add("meet");
-    } 
-    else if (url.includes("zoom.us")) {
-      icon = "fa-video";
-      label = "Entrar no Zoom";
-      joinBtn.classList.add("zoom");
-    }
-
     linkEl.innerText = link;
-
-    joinBtn.innerHTML = `<i class="fa-solid ${icon}"></i> ${label}`;
     joinBtn.href = link;
     joinBtn.classList.remove("hidden");
-
   } else {
     linkEl.innerText = "-";
     joinBtn.classList.add("hidden");
   }
 
-  // ABRIR MODAL
   document.getElementById('detailsModal').classList.remove('hidden');
 },
-      },
 
-    eventResize: async (info) => {
-      const e = info.event;
-      await supabase.from('events').update({
-        end_time: e.endStr.split('T')[1].slice(0,5)
-      }).eq('id', e.id);
-    },
+eventResize: async (info) => {
+  const e = info.event;
+  await supabase.from('events').update({
+    end_time: e.endStr.split('T')[1].slice(0,5)
+  }).eq('id', e.id);
+},
 
-    events: async function(fetchInfo, successCallback) {
-      const events = await loadEvents();
+events: async function(fetchInfo, successCallback) {
+  const events = await loadEvents();
 
-      const year = fetchInfo.start.getFullYear();
+  const year = fetchInfo.start.getFullYear();
 
-      const holidays = getHolidays(year).map(h => ({
-        title: h.title,
-        start: h.date,
-        allDay: true,
-        color: "#f8d7da",
-        textColor: "#721c24"
-      }));
+  const holidays = getHolidays(year).map(h => ({
+    title: h.title,
+    start: h.date,
+    allDay: true,
+    color: "#f8d7da",
+    textColor: "#721c24"
+  }));
 
-      successCallback([...events, ...holidays]);
-    }
+  successCallback([...events, ...holidays]);
+}
 
 }); // 👈 FECHA O CALENDÁRIO
 
