@@ -69,6 +69,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const calendarEl = document.getElementById('calendar');
   const categoryList = document.getElementById('categoryList');
   const categorySelect = document.getElementById('category');
+  const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.querySelector('.sidebar');
+
+if (menuBtn) {
+  menuBtn.onclick = () => {
+    sidebar.classList.toggle('open');
+  };
+}
 
   /* 🔍 BUSCA */
   document.getElementById('search').oninput = (e) => {
