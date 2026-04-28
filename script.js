@@ -269,7 +269,7 @@ ${props.link || ''}
   // TÍTULO
   titleEl.innerText = event.title;
 
-  // TAG (ONLINE / PRESENCIAL)
+  // TAG
   const mode = event.extendedProps.mode;
   modeEl.innerHTML = `
     <span class="tag ${mode}">
@@ -280,7 +280,7 @@ ${props.link || ''}
   // LOCAL
   locationEl.innerText = event.extendedProps.location || "-";
 
-  // LINK + BOTÃO INTELIGENTE
+  // LINK
   const link = event.extendedProps.link;
 
   if (link) {
@@ -321,6 +321,7 @@ ${props.link || ''}
   // ABRIR MODAL
   document.getElementById('detailsModal').classList.remove('hidden');
 },
+  
 /* ================= MODAL ================= */
 
 const modal = document.getElementById('modal');
