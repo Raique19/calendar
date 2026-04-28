@@ -95,8 +95,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     calendar.refetchEvents();
   };
 
-  // 👇 ESSENCIAL
   categoryList.appendChild(li);
+
+  // 👇 ISSO ESTAVA FALTANDO OU QUEBRADO
+  const option = document.createElement('option');
+  option.value = cat;
+  option.textContent = cat;
+  categorySelect.appendChild(option);
 });
     
   /* PREVIEW */
