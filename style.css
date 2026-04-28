@@ -297,3 +297,49 @@ main {
   transform: translateY(-1px);
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
+.event-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.event-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.event-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.event-time {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+}
+
+.event-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+/* CARD STYLE */
+.fc-event {
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 6px !important;
+  background: #ffffff !important;
+  border-left: 4px solid currentColor !important;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  transition: 0.2s;
+}
+
+/* HOVER */
+.fc-event:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
