@@ -9,6 +9,7 @@ const categories = {
   atendimento: "#2c3e50"
 };
 
+let searchTerm = "";
 let calendar;
 let selectedDate = null;
 let selectedEvent = null;
@@ -69,22 +70,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   const categoryList = document.getElementById('categoryList');
   const categorySelect = document.getElementById('category');
 
+  document.getElementById('search').oninput = (e) => {
+  searchTerm = e.target.value.toLowerCase();
+  calendar.refetchEvents();
+};
+
   /* SIDEBAR */
   Object.keys(categories).forEach(cat => {
     const li = document.createElement('li');
-    li.innerHTML = `<span class="dot" style="background:${categories[cat]}"></span>${cat}`;
-    li.onclick = () => {
-      filterCategory = cat;
-      calendar.refetchEvents();
-    };
-    categoryList.appendChild(li);
+li.dataset.cat = cat;
 
-    const option = document.createElement('option');
-    option.value = cat;
-    option.textContent = cat;
-    categorySelect.appendChild(option);
-  });
+li.innerHTML = `
+  <span class="dot" style="background:${categories[cat]}"></span>
+  <span>${cat}</span>
+  <span class="count">0</span>
+`;
 
+li.onclick = () => {
+  filterCategory = cat;
+
+  document.querySelectorAll('.sidebar li').forEach(el => el.classList.remove('active'));
+  li.classList.add('active');
+
+  calendar.refetchEvents();
+};
   /* PREVIEW */
   const previewDot = document.getElementById('previewDot');
   const previewText = document.getElementById('previewText');
@@ -101,25 +110,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('category').onchange = updatePreview;
 
   /* LOAD EVENTS */
+    
  async function loadEvents() {
   const { data } = await supabase.from('events').select('*');
 
-  return data
-    .filter(e => !filterCategory || e.category === filterCategory)
-    .map(e => ({
-      id: e.id,
-      title: e.title,
-      start: `${e.date}T${e.start_time}`,
-      end: `${e.date}T${e.end_time}`,
-      color: categories[e.category],
+  const counts = {};
 
-      extendedProps: {
-        mode: e.mode,
-        location: e.location,
-        link: e.link
-      }
-    }));
-}
+data.forEach(e => {
+  counts[e.category] = (counts[e.category] || 0) + 1;
+});
+
+document.querySelectorAll('#categoryList li').forEach(li => {
+  const cat = li.dataset.cat;
+  if (counts[cat]) {
+    li.querySelector('.count').innerText = counts[cat];
+  }
+});
+
+   .filter(e =>
+  (!filterCategory || e.category === filterCategory) &&
+  (!searchTerm || e.title.toLowerCase().includes(searchTerm))
+)
 
   calendar = new FullCalendar.Calendar(calendarEl, {
 
@@ -149,6 +160,7 @@ ${props.location || ''}
 ${props.link || ''}
   `;
 },
+
     
     initialView: 'dayGridMonth',
 
