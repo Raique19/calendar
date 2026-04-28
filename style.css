@@ -391,3 +391,29 @@ main {
   justify-content: center;
   gap: 6px;
 }
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.event-time {
+  font-size: 10px;
+  color: #6b7280;
+}
+
+.event-mode {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.event-mode.virtual {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.event-mode.presencial {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
