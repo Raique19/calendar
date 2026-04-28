@@ -421,3 +421,29 @@ main {
 .event-box * {
   pointer-events: none;
 }
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+  .menu-btn {
+    display: inline-block;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -260px;
+    top: 0;
+    height: 100%;
+    z-index: 9999;
+    transition: 0.3s;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+}
