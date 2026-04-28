@@ -264,3 +264,36 @@ main {
   font-size: 12px;
   color: #7f8c8d;
 }
+.event-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.event-time {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.event-title {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* estilo geral do evento */
+.fc-event {
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 6px !important;
+  background: #ffffff !important;
+  border-left: 4px solid currentColor !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  color: #2c3e50 !important;
+}
+
+/* hover mais bonito */
+.fc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
