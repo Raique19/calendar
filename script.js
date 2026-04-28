@@ -179,38 +179,40 @@ calendar = new FullCalendar.Calendar(calendarEl, {
     eventContent: function(arg) {
   const start = arg.event.extendedProps.start_time || "";
   const end = arg.event.extendedProps.end_time || "";
-      const color = arg.event.backgroundColor;
-const formatTime = (t) => t ? t.slice(0,5) : "";
+  const color = arg.event.backgroundColor;
 
-const startFormatted = formatTime(start);
-const endFormatted = formatTime(end);
+  const formatTime = (t) => t ? t.slice(0,5) : "";
 
-const mode = arg.event.extendedProps.mode;
-      
+  const startFormatted = formatTime(start);
+  const endFormatted = formatTime(end);
+
+  const mode = arg.event.extendedProps.mode;
+
   return {
-  html: `
-    <div class="event-box" style="border-left:4px solid ${color}">
-      
-      <div class="event-header">
-        <span class="event-dot" style="background:${color}"></span>
+    html: `
+      <div class="event-box" style="border-left:4px solid ${color}">
+        
+        <div class="event-header">
+          <span class="event-dot" style="background:${color}"></span>
 
-        ${startFormatted && endFormatted 
-          ? `<span class="event-time">${startFormatted} - ${endFormatted}</span>` 
-          : ""
-        }
+          ${startFormatted && endFormatted 
+            ? `<span class="event-time">${startFormatted} - ${endFormatted}</span>` 
+            : ""
+          }
 
-        ${mode ? `<span class="event-mode ${mode}">
-          ${mode === 'virtual' ? 'ON' : 'PRE'}
-        </span>` : ""}
+          ${mode ? `<span class="event-mode ${mode}">
+            ${mode === 'virtual' ? 'ON' : 'PRE'}
+          </span>` : ""}
+        </div>
+
+        <div class="event-title">${arg.event.title}</div>
+
       </div>
+    `
+  };
+},  // 👈 ESSA VÍRGULA É O QUE FALTAVA
 
-      <div class="event-title">${arg.event.title}</div>
-
-    </div>
-  `
-};
-},
-  
+eventDidMount: function(info) {
   const props = info.event.extendedProps;
 
   const start = info.event.start?.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
@@ -223,7 +225,6 @@ ${props.location || ''}
 ${props.link || ''}
   `;
 },
-
     
     initialView: 'dayGridMonth',
 
