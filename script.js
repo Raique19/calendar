@@ -210,6 +210,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 },
 
+  eventDidMount: function(info) {
+
+  info.el.style.cursor = "pointer";
+
+  info.el.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // 🔥 ESSENCIAL
+
+    info.view.calendar.trigger('eventClick', {
+      el: info.el,
+      event: info.event,
+      jsEvent: e,
+      view: info.view
+    });
+  });
+
+},
     initialView: 'dayGridMonth',
     locale: 'pt-br',
 
