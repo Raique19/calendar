@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const categoryList = document.getElementById('categoryList');
   const categorySelect = document.getElementById('category');
 
-  /* SIDEBAR + SELECT */
+  /* SIDEBAR */
   Object.keys(categories).forEach(cat => {
     const li = document.createElement('li');
     li.innerHTML = `<span class="dot" style="background:${categories[cat]}"></span>${cat}`;
@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   calendar = new FullCalendar.Calendar(calendarEl, {
+
     initialView: 'dayGridMonth',
 
     locale: 'pt-br',
@@ -166,15 +167,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       }).eq('id', e.id);
     },
 
-    events: async (fetchInfo, successCallback) => {
+    events: async function(fetchInfo, successCallback) {
       const events = await loadEvents();
-      const year = new Date().getFullYear();
+
+      const year = fetchInfo.start.getFullYear();
 
       const holidays = getHolidays(year).map(h => ({
         title: h.title,
         start: h.date,
         allDay: true,
-        color: "#95a5a6"
+        color: "#bdc3c7"
       }));
 
       successCallback([...events, ...holidays]);
@@ -183,8 +185,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   calendar.render();
 
-  /* BOTÕES */
   document.getElementById('todayBtn').onclick = () => calendar.today();
+
   document.getElementById('clearFilters').onclick = () => {
     filterCategory = null;
     calendar.refetchEvents();
@@ -212,12 +214,9 @@ function openModal(event = null) {
 
 closeBtn.onclick = () => modal.classList.add('hidden');
 
-/* FECHAR AO CLICAR FORA */
 modal.addEventListener('click', (e) => {
   if (e.target === modal) modal.classList.add('hidden');
 });
-
-/* SALVAR */
 
 saveBtn.onclick = async () => {
   const title = document.getElementById('title').value;
@@ -242,8 +241,6 @@ saveBtn.onclick = async () => {
   modal.classList.add('hidden');
   calendar.refetchEvents();
 };
-
-/* EXCLUIR */
 
 deleteBtn.onclick = async () => {
   if (!selectedEvent) return;
