@@ -1,35 +1,33 @@
-/* RESET BÁSICO */
+/* RESET */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
+/* BASE */
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: #f5f6fa;
+  background: #f4f6f9;
   color: #2c3e50;
 }
 
 /* HEADER */
-
 .topbar {
   background: white;
   padding: 16px 24px;
-  border-bottom: 1px solid #eee;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
+  border-bottom: 1px solid #eee;
 }
 
 /* LAYOUT */
-
 .layout {
   display: flex;
   min-height: calc(100vh - 60px);
 }
 
 /* SIDEBAR */
-
 .sidebar {
   width: 240px;
   background: white;
@@ -39,7 +37,9 @@ body {
 
 .sidebar h3 {
   margin-bottom: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: #7f8c8d;
 }
 
 .sidebar ul {
@@ -61,27 +61,43 @@ body {
 }
 
 .dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
 }
 
-/* BOTÕES SIDEBAR */
+/* BOTÕES */
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
+}
 
+button:hover {
+  transform: translateY(-1px);
+}
+
+/* BOTÕES SIDEBAR */
 .sidebar button {
-  margin-top: 10px;
   width: 100%;
+  margin-top: 8px;
+  background: #ecf0f1;
+}
+
+.sidebar button:hover {
+  background: #dcdde1;
 }
 
 /* MAIN */
-
 main {
   flex: 1;
-  padding: 30px;
+  padding: 25px;
 }
 
 /* CALENDÁRIO */
-
 #calendar {
   background: white;
   border-radius: 16px;
@@ -89,19 +105,12 @@ main {
   box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-/* FULLCALENDAR CUSTOM */
-
+/* FULLCALENDAR */
 .fc-button {
   background: #ecf0f1 !important;
   border: none !important;
   border-radius: 8px !important;
   color: #2c3e50 !important;
-  font-weight: 500;
-  transition: 0.2s;
-}
-
-.fc-button:hover {
-  background: #dcdde1 !important;
 }
 
 .fc-button-active {
@@ -113,17 +122,23 @@ main {
   font-weight: 600;
 }
 
-/* EVENTOS */
-
 .fc-event {
   border: none !important;
-  border-radius: 6px !important;
-  padding: 2px 4px;
+  border-radius: 8px !important;
+  padding: 4px 6px;
   font-size: 12px;
 }
 
-/* MODAL */
+.fc-day-today {
+  background: #fff8e1 !important;
+}
 
+.fc-col-header-cell {
+  font-weight: 600;
+  color: #34495e;
+}
+
+/* MODAL */
 .modal {
   position: fixed;
   top: 0;
@@ -137,71 +152,38 @@ main {
   align-items: center;
 
   z-index: 9999;
-
-  animation: fadeIn 0.2s ease;
 }
 
 .hidden {
   display: none;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
 .modal-content {
   background: white;
   padding: 25px;
   border-radius: 16px;
-  width: 340px;
+  width: 360px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
 
   display: flex;
   flex-direction: column;
   gap: 10px;
-
-  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-
-  animation: scaleIn 0.2s ease;
-}
-
-@keyframes scaleIn {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
 }
 
 /* INPUTS */
-
 .modal-content input,
 .modal-content select {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ddd;
-  font-size: 14px;
-}
-
-/* LINHA DUPLA */
-
-.row {
-  display: flex;
-  gap: 10px;
 }
 
 /* PREVIEW */
-
 .preview {
-  margin-top: 10px;
   display: flex;
   align-items: center;
   gap: 10px;
-
-  background: #f5f6fa;
+  background: #f4f6f9;
   padding: 10px;
   border-radius: 8px;
 }
@@ -212,36 +194,16 @@ main {
   border-radius: 50%;
 }
 
-/* BOTÕES */
-
+/* AÇÕES */
 .actions {
   display: flex;
   gap: 10px;
-  margin-top: 10px;
-}
-
-button {
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.2s;
-}
-
-button:hover {
-  transform: translateY(-1px);
 }
 
 /* BOTÕES ESPECÍFICOS */
-
 #save {
   background: #27ae60;
   color: white;
-}
-
-#save:hover {
-  background: #2ecc71;
 }
 
 #delete {
@@ -249,29 +211,36 @@ button:hover {
   color: white;
 }
 
-#delete:hover {
-  background: #ff6b5a;
-}
-
 #close {
-  background: #ecf0f1;
+  background: #bdc3c7;
 }
 
-#close:hover {
-  background: #dcdde1;
+/* MODAL DETALHES */
+#detailsModal .modal-content {
+  width: 380px;
 }
-.fc-day-today {
-  background: #fff8e1 !important;
+
+#detailsModal h2 {
+  margin-bottom: 10px;
 }
-.fc-event {
-  border-radius: 8px !important;
-  padding: 4px 6px !important;
-  font-weight: 500;
+
+#detailsModal p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
 }
-.fc-col-header-cell {
-  font-weight: 600;
-  color: #34495e;
+
+#detailsModal i {
+  color: #7f8c8d;
 }
-.fc-daygrid-day {
-  padding: 6px;
+
+#deleteEvent {
+  background: #e74c3c;
+  color: white;
+  margin-top: 10px;
+}
+
+#closeDetails {
+  background: #ecf0f1;
 }
