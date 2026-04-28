@@ -94,6 +94,10 @@ li.onclick = () => {
 
   calendar.refetchEvents();
 };
+
+    categoryList.appendChild(li);
+});
+    
   /* PREVIEW */
   const previewDot = document.getElementById('previewDot');
   const previewText = document.getElementById('previewText');
@@ -111,27 +115,43 @@ li.onclick = () => {
 
   /* LOAD EVENTS */
     
- async function loadEvents() {
+async function loadEvents() {
   const { data } = await supabase.from('events').select('*');
 
   const counts = {};
 
-data.forEach(e => {
-  counts[e.category] = (counts[e.category] || 0) + 1;
-});
+  data.forEach(e => {
+    counts[e.category] = (counts[e.category] || 0) + 1;
+  });
 
-document.querySelectorAll('#categoryList li').forEach(li => {
-  const cat = li.dataset.cat;
-  if (counts[cat]) {
-    li.querySelector('.count').innerText = counts[cat];
-  }
-});
+  document.querySelectorAll('#categoryList li').forEach(li => {
+    const cat = li.dataset.cat;
+    const countEl = li.querySelector('.count');
 
-   .filter(e =>
-  (!filterCategory || e.category === filterCategory) &&
-  (!searchTerm || e.title.toLowerCase().includes(searchTerm))
-)
+    if (countEl) {
+      countEl.innerText = counts[cat] || 0;
+    }
+  });
 
+  return data
+    .filter(e =>
+      (!filterCategory || e.category === filterCategory) &&
+      (!searchTerm || (e.title || '').toLowerCase().includes(searchTerm))
+    )
+    .map(e => ({
+      id: e.id,
+      title: e.title,
+      start: `${e.date}T${e.start_time}`,
+      end: `${e.date}T${e.end_time}`,
+      color: categories[e.category],
+      extendedProps: {
+        mode: e.mode,
+        location: e.location,
+        link: e.link
+      }
+    }));
+}
+    
   calendar = new FullCalendar.Calendar(calendarEl, {
 
     dayCellDidMount: function(info) {
