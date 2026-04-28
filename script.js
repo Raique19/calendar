@@ -145,22 +145,23 @@ async function loadEvents() {
       (!searchTerm || (e.title || '').toLowerCase().includes(searchTerm))
     )
     .map(e => ({
-  id: e.id,
-  title: e.title,
-  start: `${e.date}T${e.start_time}`,
-  end: `${e.date}T${e.end_time}`,
-  color: categories[e.category],
+      id: e.id,
+      title: e.title,
+      start: `${e.date}T${e.start_time}`,
+      end: `${e.date}T${e.end_time}`,
+      color: categories[e.category],
+      extendedProps: {
+        mode: e.mode,
+        location: e.location,
+        link: e.link,
+        start_time: e.start_time,
+        end_time: e.end_time
+      }
+    }));
+}
 
-  extendedProps: {
-    mode: e.mode,
-    location: e.location,
-    link: e.link,
-    start_time: e.start_time,
-    end_time: e.end_time
-  }
-}));
-    
-  calendar = new FullCalendar.Calendar(calendarEl, {
+// 👇 AQUI FORA (IMPORTANTE)
+calendar = new FullCalendar.Calendar(calendarEl, {
 
     dayCellDidMount: function(info) {
   const date = info.date.toISOString().split('T')[0];
@@ -176,13 +177,16 @@ async function loadEvents() {
 },
 
     eventContent: function(arg) {
-  const start = arg.event.extendedProps.start_time;
-  const end = arg.event.extendedProps.end_time;
+  const start = arg.event.extendedProps.start_time || "";
+  const end = arg.event.extendedProps.end_time || "";
 
   return {
     html: `
       <div class="event-box">
-        <div class="event-time">${start} - ${end}</div>
+        <div class="event-header">
+          <span class="event-dot" style="background:${arg.event.backgroundColor}"></span>
+          ${start && end ? `<span class="event-time">${start} - ${end}</span>` : ""}
+        </div>
         <div class="event-title">${arg.event.title}</div>
       </div>
     `
