@@ -244,3 +244,23 @@ main {
 #closeDetails {
   background: #ecf0f1;
 }
+.fc-event:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  transition: 0.2s;
+}
+.fc-event {
+  border-left: 4px solid rgba(0,0,0,0.2) !important;
+  background: #ffffff !important;
+  color: #2c3e50 !important;
+}
+.sidebar li.active {
+  background: #eaf2ff;
+  font-weight: 600;
+}
+
+.count {
+  margin-left: auto;
+  font-size: 12px;
+  color: #7f8c8d;
+}
