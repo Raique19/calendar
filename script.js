@@ -255,10 +255,9 @@ ${props.link || ''}
       openModal();
     },
 
-  eventClick: (info) => {
+ eventClick: (info) => {
 
   selectedEvent = info.event;
-
   const event = info.event;
 
   const titleEl = document.getElementById('detailTitle');
@@ -270,7 +269,7 @@ ${props.link || ''}
   // TÍTULO
   titleEl.innerText = event.title;
 
-  // MODE (TAG BONITA)
+  // TAG (ONLINE / PRESENCIAL)
   const mode = event.extendedProps.mode;
   modeEl.innerHTML = `
     <span class="tag ${mode}">
@@ -281,7 +280,7 @@ ${props.link || ''}
   // LOCAL
   locationEl.innerText = event.extendedProps.location || "-";
 
-  // LINK + DETECÇÃO
+  // LINK + BOTÃO INTELIGENTE
   const link = event.extendedProps.link;
 
   if (link) {
@@ -322,22 +321,6 @@ ${props.link || ''}
   // ABRIR MODAL
   document.getElementById('detailsModal').classList.remove('hidden');
 },
-
-      successCallback([...events, ...holidays]);
-    }
-  });
-
-  calendar.render();
-
-  document.getElementById('todayBtn').onclick = () => calendar.today();
-
-  document.getElementById('clearFilters').onclick = () => {
-    filterCategory = null;
-    calendar.refetchEvents();
-  };
-
-});
-
 /* ================= MODAL ================= */
 
 const modal = document.getElementById('modal');
