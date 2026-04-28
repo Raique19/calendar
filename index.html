@@ -83,16 +83,39 @@
 
   <!-- MODAL DETALHES -->
 <div id="detailsModal" class="modal hidden">
-  <div class="modal-content">
+  <div class="modal-content details">
 
     <h2 id="detailTitle"></h2>
 
-   <p><i class="fa-solid fa-user"></i> <span id="detailMode"></span></p>
-<p><i class="fa-solid fa-location-dot"></i> <span id="detailLocation"></span></p>
-<p><i class="fa-solid fa-link"></i> <span id="detailLink"></span></p>
+    <div class="detail-row">
+      <i class="fa-solid fa-user"></i>
+      <span id="detailMode"></span>
+    </div>
 
-    <button id="deleteEvent">Excluir</button>
-<button id="closeDetails">Fechar</button>
+    <div class="detail-row">
+      <i class="fa-solid fa-location-dot"></i>
+      <span id="detailLocation"></span>
+    </div>
+
+    <div class="detail-row">
+      <i class="fa-solid fa-link"></i>
+      <span id="detailLinkText"></span>
+    </div>
+
+    <a id="joinBtn" target="_blank" class="join hidden">
+      <i class="fa-solid fa-video"></i>
+      Entrar na reunião
+    </a>
+
+    <div class="actions">
+      <button id="deleteEvent">
+        <i class="fa-solid fa-trash"></i> Excluir
+      </button>
+      <button id="closeDetails">
+        <i class="fa-solid fa-xmark"></i> Fechar
+      </button>
+    </div>
+
   </div>
 </div>
   
