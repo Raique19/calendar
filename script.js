@@ -70,8 +70,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const categoryList = document.getElementById('categoryList');
   const categorySelect = document.getElementById('category');
 
+  /* 🔍 BUSCA */
   document.getElementById('search').oninput = (e) => {
     searchTerm = e.target.value.toLowerCase();
+    calendar.refetchEvents();
+  };
+
+  /* 🧹 LIMPAR FILTRO (NOVO) */
+  document.getElementById('clearFilters').onclick = () => {
+    filterCategory = null;
+
+    document.querySelectorAll('.sidebar li')
+      .forEach(el => el.classList.remove('active'));
+
     calendar.refetchEvents();
   };
 
@@ -203,11 +214,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (link) {
         linkEl.innerText = link;
-        joinBtn.href = link;
-        joinBtn.classList.remove("hidden");
+
+        if (joinBtn) {
+          joinBtn.href = link;
+          joinBtn.classList.remove("hidden");
+        }
+
       } else {
         linkEl.innerText = "-";
-        joinBtn.classList.add("hidden");
+        if (joinBtn) joinBtn.classList.add("hidden");
       }
 
       document.getElementById('detailsModal').classList.remove('hidden');
@@ -266,33 +281,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     calendar.refetchEvents();
   };
 
-  /* DETAILS (CORREÇÃO) */
+  /* DETAILS */
 
-  const btnCloseDetails = document.getElementById('closeDetails');
-  if (btnCloseDetails) {
-    btnCloseDetails.onclick = () => {
-      document.getElementById('detailsModal').classList.add('hidden');
-    };
-  }
+  document.getElementById('closeDetails').onclick = () => {
+    document.getElementById('detailsModal').classList.add('hidden');
+  };
 
-  const deleteBtnDetails = document.getElementById('deleteEvent');
-  if (deleteBtnDetails) {
-    deleteBtnDetails.onclick = async () => {
+  document.getElementById('deleteEvent').onclick = async () => {
 
-      if (!selectedEvent) return;
+    if (!selectedEvent) return;
 
-      const confirmar = confirm("Deseja excluir este evento?");
-      if (!confirmar) return;
+    const confirmar = confirm("Deseja excluir este evento?");
+    if (!confirmar) return;
 
-      await supabase
-        .from('events')
-        .delete()
-        .eq('id', selectedEvent.id);
+    await supabase
+      .from('events')
+      .delete()
+      .eq('id', selectedEvent.id);
 
-      document.getElementById('detailsModal').classList.add('hidden');
+    document.getElementById('detailsModal').classList.add('hidden');
 
-      calendar.refetchEvents();
-    };
-  }
+    calendar.refetchEvents();
+  };
 
 });
