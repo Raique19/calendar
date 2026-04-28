@@ -321,6 +321,34 @@ ${props.link || ''}
   // ABRIR MODAL
   document.getElementById('detailsModal').classList.remove('hidden');
 },
+      },
+
+    eventResize: async (info) => {
+      const e = info.event;
+      await supabase.from('events').update({
+        end_time: e.endStr.split('T')[1].slice(0,5)
+      }).eq('id', e.id);
+    },
+
+    events: async function(fetchInfo, successCallback) {
+      const events = await loadEvents();
+
+      const year = fetchInfo.start.getFullYear();
+
+      const holidays = getHolidays(year).map(h => ({
+        title: h.title,
+        start: h.date,
+        allDay: true,
+        color: "#f8d7da",
+        textColor: "#721c24"
+      }));
+
+      successCallback([...events, ...holidays]);
+    }
+
+}); // 👈 FECHA O CALENDÁRIO
+
+calendar.render();
   
 /* ================= MODAL ================= */
 
