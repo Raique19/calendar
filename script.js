@@ -229,10 +229,10 @@ if (menuBtn) {
 },
 
    headerToolbar: {
-  left: 'prev,next today',
-  center: 'title',
-  right: window.innerWidth < 768 ? 'timeGridWeek,timeGridDay' : 'month,week,day'
-}
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
 
     editable: true,
     selectable: true,
