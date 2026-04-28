@@ -596,3 +596,23 @@ main {
   }
 
 }
+@media (max-width: 768px) {
+
+  .fc-daygrid-event {
+    display: block;
+    white-space: normal;
+    height: auto;
+  }
+
+  .event-title {
+    white-space: normal;
+    font-size: 12px;
+  }
+
+  .event-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+}
